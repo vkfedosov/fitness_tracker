@@ -43,8 +43,7 @@ class Training:
         return distance
 
     def get_mean_speed(self) -> float:
-        """Выполняет расчёт средней скорости движения во время тренировки.
-        """
+        """Выполняет расчёт средней скорости движения во время тренировки."""
         mean_speed = self.get_distance() / self.duration
         return mean_speed
 
@@ -53,7 +52,7 @@ class Training:
         Логика подсчета калорий для каждого вида тренировки своя и описана в
         соответствующем классе.
         """
-        pass
+        raise NotImplementedError('Метод не может быть вызван напрямую')
 
     def show_training_info(self) -> InfoMessage:
         """Возвращает информационное сообщение о выполненной тренировке."""
@@ -139,9 +138,12 @@ def read_package(workout: str, data: list) -> Training:
     training_type: Dict[str, Type[Training]] = {
         'RUN': Running,
         'WLK': SportsWalking,
-        'SWM': Swimming
+        'SWM': Swimming,
     }
-    return training_type[workout](*data)
+    try:
+        return training_type[workout](*data)
+    except KeyError as ke:
+        print(f'Ключ {ke} не найден в словаре')
 
 
 def main(training: Training) -> None:
